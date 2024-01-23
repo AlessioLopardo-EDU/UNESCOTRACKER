@@ -12,11 +12,9 @@
     <div id="globeViz"></div>
 
     <script>
-      // Charger le fichier real_planet_unesco.json
       fetch("../datasets/real_planet_unesco.json")
         .then((res) => res.json())
         .then((places) => {
-          // Utiliser le tableau de lieux dans real_planet_unesco.json
           const globeInstance = Globe()
             .globeImageUrl(
               "//unpkg.com/three-globe/example/img/earth-night.jpg"
@@ -28,9 +26,17 @@
             .labelLat((d) => d.latitude)
             .labelLng((d) => d.longitude)
             .labelText((d) => d.name_en)
-            .labelSize(0.03) // Vous pouvez ajuster la taille des étiquettes selon vos besoins
-            .labelDotRadius(0.21) // Vous pouvez ajuster le rayon des points selon vos besoins
-            .labelColor(() => "rgb(176, 201, 255)")
+            .labelSize(0.03)
+            .labelDotRadius(0.21)
+            .labelColor((d) => {
+              if (d.category == "Cultural") {
+                return "rgb(128, 189, 255)";
+              } else if (d.category == "Natural") {
+                return "rgb(42, 245, 48)";
+              } else if (d.category == "Mixed") {
+                return "rgb(246, 250, 32)";
+              }
+            })
             .labelResolution(2)(document.getElementById("globeViz"));
 
           globeInstance.onLabelClick((label, event, coords) => {
