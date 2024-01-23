@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+    <script src="//unpkg.com/globe.gl"></script>
+  </head>
+  <body>
+    <div id="globeViz"></div>
+
+    <script>
+      // Charger le fichier real_planet_unesco.json
+      fetch("../datasets/real_planet_unesco.json")
+        .then((res) => res.json())
+        .then((places) => {
+          // Utiliser le tableau de lieux dans real_planet_unesco.json
+          Globe()
+            .globeImageUrl(
+              "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+            )
+            .backgroundImageUrl(
+              "//unpkg.com/three-globe/example/img/night-sky.png"
+            )
+            .labelsData(places)
+            .labelLat((d) => d.latitude)
+            .labelLng((d) => d.longitude)
+            .labelText((d) => d.name_en)
+            .labelSize(0.03) // Vous pouvez ajuster la taille des étiquettes selon vos besoins
+            .labelDotRadius(0.21) // Vous pouvez ajuster le rayon des points selon vos besoins
+            .labelColor(() => "rgb(47, 106, 235)")
+            .labelResolution(2)(document.getElementById("globeViz"));
+        });
+    </script>
+  </body>
+</html>
