@@ -17,9 +17,9 @@
         .then((res) => res.json())
         .then((places) => {
           // Utiliser le tableau de lieux dans real_planet_unesco.json
-          Globe()
+          const globeInstance = Globe()
             .globeImageUrl(
-              "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+              "//unpkg.com/three-globe/example/img/earth-night.jpg"
             )
             .backgroundImageUrl(
               "//unpkg.com/three-globe/example/img/night-sky.png"
@@ -30,8 +30,13 @@
             .labelText((d) => d.name_en)
             .labelSize(0.03) // Vous pouvez ajuster la taille des étiquettes selon vos besoins
             .labelDotRadius(0.21) // Vous pouvez ajuster le rayon des points selon vos besoins
-            .labelColor(() => "rgba(255, 165, 0, 0.75)")
+            .labelColor(() => "rgb(176, 201, 255)")
             .labelResolution(2)(document.getElementById("globeViz"));
+
+          globeInstance.onLabelClick((label, event, coords) => {
+            // Rediriger vers le lien associé au lieu
+            window.open(label.link, "_blank");
+          });
         });
     </script>
   </body>
