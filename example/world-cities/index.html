@@ -5,13 +5,48 @@
       body {
         margin: 0;
       }
+
+      .test {
+        display: block;
+        position: fixed;
+        z-index: 200;
+        padding: 20px;
+        font-size: 40px;
+        font-family: "Trebuchet MS", sans-serif;
+      }
+      .Pcultural {
+        color: rgb(128, 189, 255);
+      }
+      .Pnatural {
+        color: rgb(42, 245, 48);
+      }
+      .Pmixed {
+        color: rgb(246, 250, 32);
+      }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
   </head>
   <body>
+    <div class="test">
+      <p onclick="culturalClick()" class="Pcultural">Cultural</p>
+      <p onclick="naturalClick()" class="Pnatural">Natural</p>
+      <p onclick="mixedClick()" class="Pmixed">Mixed</p>
+    </div>
+
     <div id="globeViz"></div>
 
     <script>
+      let category;
+      function culturalClick() {
+        category = "Cultural";
+      }
+      function naturalClick() {
+        category = "Natural";
+      }
+      function mixedClick() {
+        category = "Mixed";
+      }
+
       fetch("../datasets/real_planet_unesco.json")
         .then((res) => res.json())
         .then((places) => {
@@ -40,7 +75,6 @@
             .labelResolution(2)(document.getElementById("globeViz"));
 
           globeInstance.onLabelClick((label, event, coords) => {
-            // Rediriger vers le lien associé au lieu
             window.open(label.link, "_blank");
           });
         });
