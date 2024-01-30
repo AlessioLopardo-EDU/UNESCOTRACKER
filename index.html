@@ -14,6 +14,7 @@
         font-size: 40px;
         font-family: "Trebuchet MS", sans-serif;
       }
+
       .Pcultural {
         color: rgb(128, 189, 255);
       }
@@ -23,29 +24,26 @@
       .Pmixed {
         color: rgb(246, 250, 32);
       }
+      .Pmixed,
+      .Pcultural,
+      .Pnatural:hover {
+        cursor: pointer;
+      }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
   </head>
   <body>
     <div class="test">
-      <p onclick="culturalClick()" class="Pcultural">Cultural</p>
-      <p onclick="naturalClick()" class="Pnatural">Natural</p>
-      <p onclick="mixedClick()" class="Pmixed">Mixed</p>
+      <p onclick="culturalClick()" class="Pcultural">• Cultural</p>
+      <p onclick="naturalClick()" class="Pnatural">• Natural</p>
+      <p onclick="mixedClick()" class="Pmixed">• Mixed</p>
     </div>
 
     <div id="globeViz"></div>
 
     <script>
       let category;
-      function culturalClick() {
-        category = "Cultural";
-      }
-      function naturalClick() {
-        category = "Natural";
-      }
-      function mixedClick() {
-        category = "Mixed";
-      }
+      let i;
 
       //Fichier jsnon contenant toutes les infos
       fetch("datasets/real_planet_unesco.json")
@@ -86,6 +84,27 @@
           globeInstance.onLabelClick((label, event, coords) => {
             window.open(label.link, "_blank");
           });
+
+          globeinstance.OnlabelRightClick;
+          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 1 }, 8000);
+
+          globeInstance.onZoom((lat, lng, altitude) => {
+            let cameraPosition = globeInstance.pointOfView();
+            let alt = cameraPosition.altitude;
+
+            console.log(alt);
+          });
+
+          //Choix de catégorie
+          function culturalClick() {
+            category = "Cultural";
+          }
+          function naturalClick() {
+            category = "Natural";
+          }
+          function mixedClick() {
+            category = "Mixed";
+          }
         });
     </script>
   </body>
