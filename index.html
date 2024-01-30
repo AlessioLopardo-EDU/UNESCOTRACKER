@@ -37,6 +37,12 @@
       <p onclick="culturalClick()" class="Pcultural">• Cultural</p>
       <p onclick="naturalClick()" class="Pnatural">• Natural</p>
       <p onclick="mixedClick()" class="Pmixed">• Mixed</p>
+      <input
+        type="text"
+        placeholder="Rechercher un pays.."
+        id="countrySearch"
+      />
+      <button onclick="goToCountry()">Aller au pays</button>
     </div>
 
     <div id="globeViz"></div>
@@ -44,31 +50,26 @@
     <script>
       let category;
       let i;
+      let globeInstance; // Declare globeInstance in the global scope
 
-      //Fichier jsnon contenant toutes les infos
+      // Fichier json contenant toutes les infos
       fetch("datasets/real_planet_unesco.json")
         .then((res) => res.json())
         .then((places) => {
-          //Initialisation globe
-          const globeInstance = Globe()
-            //Image globe
+          // Initialisation globe
+          globeInstance = Globe()
             .globeImageUrl(
-              "//unpkg.com/three-globe/example/img/earth-night.jpg"
+              "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
             )
-            //Image espace
             .backgroundImageUrl(
               "//unpkg.com/three-globe/example/img/night-sky.png"
             )
             .labelsData(places)
-            //Positions
             .labelLat((d) => d.latitude)
             .labelLng((d) => d.longitude)
-            //Noms
             .labelText((d) => d.name_en)
             .labelSize(0.03)
-            //Taille et couleur des points
             .labelDotRadius(0.21)
-            //Couleur différente pour chaque category
             .labelColor((d) => {
               if (d.category == "Cultural") {
                 return "rgb(128, 189, 255)";
@@ -80,32 +81,56 @@
             })
             .labelResolution(2)(document.getElementById("globeViz"));
 
-          //Ouvre la page web unesco au click du point
           globeInstance.onLabelClick((label, event, coords) => {
             window.open(label.link, "_blank");
           });
 
-          globeinstance.OnlabelRightClick;
-          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 1 }, 8000);
-
-          globeInstance.onZoom((lat, lng, altitude) => {
-            let cameraPosition = globeInstance.pointOfView();
-            let alt = cameraPosition.altitude;
-
-            console.log(alt);
-          });
-
-          //Choix de catégorie
-          function culturalClick() {
-            category = "Cultural";
-          }
-          function naturalClick() {
-            category = "Natural";
-          }
-          function mixedClick() {
-            category = "Mixed";
-          }
+          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 2 });
         });
+
+      function goToCountry() {
+        var inputCountry = document.getElementById("countrySearch").value;
+        console.log(inputCountry);
+        fetch("datasets/countries-positions.json")
+          .then((response) => response.json())
+          .then((jsonData) => {
+            if (jsonData && jsonData.ref_country_codes) {
+              var countryData = jsonData.ref_country_codes.find(function (
+                country
+              ) {
+                return (
+                  country.country.toLowerCase() === inputCountry.toLowerCase()
+                );
+              });
+
+              if (countryData) {
+                globeInstance.pointOfView(
+                  {
+                    lat: countryData.latitude,
+                    lng: countryData.longitude,
+                    altitude: 2,
+                  },
+                  3000
+                );
+
+                // Delay for 3000 milliseconds (3 seconds) before zooming in
+                setTimeout(() => {
+                  // Zoom in
+                  globeInstance.pointOfView(
+                    {
+                      lat: countryData.latitude,
+                      lng: countryData.longitude,
+                      altitude: 0.3,
+                    },
+                    3000
+                  );
+                }, 3000);
+              } else {
+                console.log("Pays non trouvé dans le JSON.");
+              }
+            }
+          });
+      }
     </script>
   </body>
 </html>
