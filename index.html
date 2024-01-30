@@ -90,7 +90,6 @@
 
       function goToCountry() {
         var inputCountry = document.getElementById("countrySearch").value;
-        console.log(inputCountry);
         fetch("datasets/countries-positions.json")
           .then((response) => response.json())
           .then((jsonData) => {
