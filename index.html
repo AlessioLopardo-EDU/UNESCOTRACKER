@@ -47,22 +47,30 @@
         category = "Mixed";
       }
 
-      fetch("../datasets/real_planet_unesco.json")
+      //Fichier jsnon contenant toutes les infos
+      fetch("datasets/real_planet_unesco.json")
         .then((res) => res.json())
         .then((places) => {
+          //Initialisation globe
           const globeInstance = Globe()
+            //Image globe
             .globeImageUrl(
               "//unpkg.com/three-globe/example/img/earth-night.jpg"
             )
+            //Image espace
             .backgroundImageUrl(
               "//unpkg.com/three-globe/example/img/night-sky.png"
             )
             .labelsData(places)
+            //Positions
             .labelLat((d) => d.latitude)
             .labelLng((d) => d.longitude)
+            //Noms
             .labelText((d) => d.name_en)
             .labelSize(0.03)
+            //Taille et couleur des points
             .labelDotRadius(0.21)
+            //Couleur différente pour chaque category
             .labelColor((d) => {
               if (d.category == "Cultural") {
                 return "rgb(128, 189, 255)";
@@ -74,6 +82,7 @@
             })
             .labelResolution(2)(document.getElementById("globeViz"));
 
+          //Ouvre la page web unesco au click du point
           globeInstance.onLabelClick((label, event, coords) => {
             window.open(label.link, "_blank");
           });
