@@ -14,5 +14,5 @@ jobs:
           node-version: latest
       - run: git checkout main
       - run: git checkout -b "Test"
-      - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER/tree/points-on-list/src
+      - run: git clone https://github.com/quemet/I165-NoSQL
       - run: git branch -d "Test"
