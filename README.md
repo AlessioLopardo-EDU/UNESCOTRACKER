@@ -1,4 +1,4 @@
-# UNESCO TRACKER ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+# 🌎 UNESCO TRACKER ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 
 Notre équipe travaille sur une plateforme innovante permettant de visualiser sur un globe 3D les monuments UNESCO à travers le monde, avec la possibilité d'interagir et de personnaliser votre expérience. Utilisant la bibliothèque [globe.gl](https://github.com/vasturiano/globe.gl) pour une représentation immersive de notre planète, cette application vous offre la chance de découvrir, marquer et partager vos sites préférés.
 
