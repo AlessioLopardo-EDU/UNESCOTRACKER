@@ -13,15 +13,9 @@ jobs:
         with:
           node-version: 'latest'
       
-      # Vos étapes existantes
-      - run: git checkout -b "Test2"
-      - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
-      - run: git checkout main
-      - run: code .
-      # Supposons que c'est ici que vous lancez votre serveur ou réalisez d'autres opérations
+
       
       # Étape pour supprimer la branche "Test"
       - name: Delete branch 'Test'
         run: git push origin --delete Test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
