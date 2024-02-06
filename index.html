@@ -24,11 +24,6 @@
       .Pmixed {
         color: rgb(246, 250, 32);
       }
-      .Pmixed,
-      .Pcultural,
-      .Pnatural:hover {
-        cursor: pointer;
-      }
 
       .bottom-text {
         font-family: Arial, Helvetica, sans-serif;
@@ -52,6 +47,7 @@
       <p onclick="culturalClick()" class="Pcultural">• Cultural</p>
       <p onclick="naturalClick()" class="Pnatural">• Natural</p>
       <p onclick="mixedClick()" class="Pmixed">• Mixed</p>
+      <!--Barre de recherche de pays-->
       <input
         type="text"
         placeholder="Rechercher un pays.."
@@ -112,7 +108,8 @@
             window.open(label.link, "_blank");
           });
 
-          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 2 });
+          //Point de vue par défaut (centré sur l'europe)
+          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 0.8 });
         });
 
       function goToCountry() {
