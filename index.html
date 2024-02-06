@@ -32,12 +32,28 @@
         bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
-        transition: 0.1ms;
         background-color: rgba(255, 255, 255, 0.445);
         padding: 10px;
         border-radius: 9px;
         color: white;
         display: inline-block;
+      }
+      .dropdown-container {
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        position: fixed;
+        z-index: 200;
+        padding: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      #sitesDropdown {
+        font-size: 12px;
+        padding: 12px;
+        background-color: rgba(255, 255, 255, 0.562);
+        border-radius: 10px;
+        border: none;
       }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
@@ -56,6 +72,9 @@
       <button onclick="goToCountry()">Aller au pays</button>
     </div>
 
+    <div class="dropdown-container">
+      <select id="sitesDropdown"></select>
+    </div>
     <div id="globeViz"></div>
 
     <div class="bottom-text" id="bottomText">
@@ -111,6 +130,51 @@
           //Point de vue par défaut (centré sur l'europe)
           globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 0.8 });
         });
+
+      // Chargez le fichier JSON des sites UNESCO
+      fetch("datasets/real_planet_unesco.json")
+        .then((response) => response.json())
+        .then((sitesData) => {
+          // Récupérez l'élément dropdown
+          const dropdown = document.getElementById("sitesDropdown");
+
+          // Créez un objet pour stocker les sites par pays
+          const sitesByCountry = {};
+
+          // Bouclez sur les données des sites UNESCO
+          sitesData.forEach((site) => {
+            // Vérifiez si le pays existe dans l'objet
+            if (!sitesByCountry[site.states_name_en]) {
+              sitesByCountry[site.states_name_en] = [];
+            }
+
+            // Ajoutez le site au tableau correspondant au pays
+            sitesByCountry[site.states_name_en].push(site);
+          });
+
+          // Bouclez sur les pays et créez les groupes et options
+          for (const country in sitesByCountry) {
+            if (sitesByCountry.hasOwnProperty(country)) {
+              // Créez un groupe d'options pour chaque pays
+              const optgroup = document.createElement("optgroup");
+              optgroup.label = country;
+
+              // Ajoutez les options pour chaque site du pays
+              sitesByCountry[country].forEach((site) => {
+                const option = document.createElement("option");
+                option.value = site.name_en;
+                option.text = site.name_en;
+                optgroup.appendChild(option);
+              });
+
+              // Ajoutez le groupe d'options au dropdown
+              dropdown.appendChild(optgroup);
+            }
+          }
+        })
+        .catch((error) =>
+          console.error("Erreur lors du chargement des sites UNESCO :", error)
+        );
 
       function goToCountry() {
         var inputCountry = document.getElementById("countrySearch").value;
