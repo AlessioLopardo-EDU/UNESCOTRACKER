@@ -15,5 +15,7 @@ jobs:
       - run: git checkout -b "Test2"
       - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
       - run: git checkout main
-      - run: code .
+      - run: git checkout -b "Test"
+      - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
+      - run: git branch -d "Test"
       - run: // trouver un moyen de lancer le serveur
