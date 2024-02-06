@@ -49,25 +49,24 @@
   </head>
   <body>
     <div class="test">
-      <p onclick="culturalClick()" class="Pcultural">• Cultural</p>
-      <p onclick="naturalClick()" class="Pnatural">• Natural</p>
-      <p onclick="mixedClick()" class="Pmixed">• Mixed</p>
+      <!--Barre de recherche de pays-->
       <input
         type="text"
         placeholder="Rechercher un pays.."
         id="countrySearch"
       />
+      <!--Bouton de redirection vers pays entré-->
       <button onclick="goToCountry()">Aller au pays</button>
     </div>
 
     <div id="globeViz"></div>
 
+    <!--Texte affiché quand la souris passe par dessus un site-->
     <div class="bottom-text" id="bottomText">
       <a id="labelLink" href="#" target="_blank"></a>
     </div>
 
     <script>
-      let category;
       let i;
       let globeInstance; // Declare globeInstance in the global scope
 
@@ -79,16 +78,18 @@
         .then((places) => {
           // Initialisation globe
           globeInstance = Globe()
-            .globeImageUrl("./src/img/betterquality.png")
+            .globeImageUrl("./src/img/betterquality.png") //Image de la terre
             .backgroundImageUrl(
               "//unpkg.com/three-globe/example/img/night-sky.png"
-            )
+            ) //image de l'espace
             .labelsData(places)
+            //position des points
             .labelLat((d) => d.latitude)
             .labelLng((d) => d.longitude)
             .labelText((d) => d.name_en)
             .labelSize(0)
-            .labelDotRadius(0.21)
+            .labelDotRadius(0.21) //taille points
+            //couleurs selon les categories
             .labelColor((d) => {
               if (d.category == "Cultural") {
                 return "rgb(128, 189, 255)";
@@ -98,26 +99,31 @@
                 return "rgb(246, 250, 32)";
               }
             })
-            .labelResolution(2)(document.getElementById("globeViz"));
+            .labelResolution(2)(document.getElementById("globeViz")); //resolution des labels
 
+          //affiche le nom du site au passage de la souris
           globeInstance.onLabelHover((label, prevLabel) => {
             if (label) {
               bottomText.innerText = `${label.name_en}`;
             } else {
+              //si aucun label n'est touché
               bottomText.innerText = "";
             }
           });
 
+          //Redirection vers le site conernant le site quand le point est cliqué
           globeInstance.onLabelClick((label, event, coords) => {
             window.open(label.link, "_blank");
           });
 
+          //Point de vue par défaut (centré sur l'europe)
           globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 2 });
         });
 
+      //Zoom sur le pays entré (en anglais) dans la barre de recherche (avec animation)
       function goToCountry() {
-        var inputCountry = document.getElementById("countrySearch").value;
-        fetch("datasets/countries-positions.json")
+        var inputCountry = document.getElementById("countrySearch").value; //pays entré
+        fetch("datasets/countries-positions.json") //prend le fichier comprenant les positions de tout les pays du monde
           .then((response) => response.json())
           .then((jsonData) => {
             if (jsonData && jsonData.ref_country_codes) {
@@ -125,11 +131,14 @@
                 country
               ) {
                 return (
+                  //vérifie la correspondance du pays
                   country.country.toLowerCase() === inputCountry.toLowerCase()
                 );
               });
 
+              //si le pays a été trouvé, alors lancer l'animation de zoom
               if (countryData) {
+                //Zoom inverse pour animation
                 globeInstance.pointOfView(
                   {
                     lat: countryData.latitude,
@@ -138,10 +147,8 @@
                   },
                   3000
                 );
-
-                // Delay for 3000 milliseconds (3 seconds) before zooming in
                 setTimeout(() => {
-                  // Zoom in
+                  // Zoom sur le pays
                   globeInstance.pointOfView(
                     {
                       lat: countryData.latitude,
@@ -151,7 +158,9 @@
                     3000
                   );
                 }, 3000);
-              } else {
+              }
+              //Si le pays n'est pas trouvé
+              else {
                 console.log("Pays non trouvé dans le JSON.");
               }
             }
