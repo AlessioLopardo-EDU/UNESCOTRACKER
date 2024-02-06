@@ -17,5 +17,7 @@ jobs:
       
       # Étape pour supprimer la branche "Test"
       - name: Delete branch 'Test'
-        run: git push origin --delete Test
+        run: git push origin --delete 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
