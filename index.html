@@ -56,7 +56,8 @@
         id="countrySearch"
       />
       <!--Bouton de redirection vers pays entré-->
-      <button onclick="goToCountry()">Aller au pays</button>
+      <button onclick="countryPoint()">Aller au pays</button>
+      <button onclick="allCountry()">Afficher les sites</button>
     </div>
 
     <div id="globeViz"></div>
@@ -67,58 +68,61 @@
     </div>
 
     <script>
+      allCountry();
       let i;
       let globeInstance; // Declare globeInstance in the global scope
 
-      let bottomText = document.getElementById("bottomText");
+      function allCountry() {
+        let bottomText = document.getElementById("bottomText");
 
-      // Fichier json contenant toutes les infos
-      fetch("datasets/real_planet_unesco.json")
-        .then((res) => res.json())
-        .then((places) => {
-          // Initialisation globe
-          globeInstance = Globe()
-            .globeImageUrl("./src/img/betterquality.png") //Image de la terre
-            .backgroundImageUrl(
-              "//unpkg.com/three-globe/example/img/night-sky.png"
-            ) //image de l'espace
-            .labelsData(places)
-            //position des points
-            .labelLat((d) => d.latitude)
-            .labelLng((d) => d.longitude)
-            .labelText((d) => d.name_en)
-            .labelSize(0)
-            .labelDotRadius(0.21) //taille points
-            //couleurs selon les categories
-            .labelColor((d) => {
-              if (d.category == "Cultural") {
-                return "rgb(128, 189, 255)";
-              } else if (d.category == "Natural") {
-                return "rgb(42, 245, 48)";
-              } else if (d.category == "Mixed") {
-                return "rgb(246, 250, 32)";
+        // Fichier json contenant toutes les infos
+        fetch("datasets/real_planet_unesco.json")
+          .then((res) => res.json())
+          .then((places) => {
+            // Initialisation globe
+            globeInstance = Globe()
+              .globeImageUrl("./src/img/betterquality.png") //Image de la terre
+              .backgroundImageUrl(
+                "//unpkg.com/three-globe/example/img/night-sky.png"
+              ) //image de l'espace
+              .labelsData(places)
+              //position des points
+              .labelLat((d) => d.latitude)
+              .labelLng((d) => d.longitude)
+              .labelText((d) => d.name_en)
+              .labelSize(0)
+              .labelDotRadius(0.21) //taille points
+              //couleurs selon les categories
+              .labelColor((d) => {
+                if (d.category == "Cultural") {
+                  return "rgb(128, 189, 255)";
+                } else if (d.category == "Natural") {
+                  return "rgb(42, 245, 48)";
+                } else if (d.category == "Mixed") {
+                  return "rgb(246, 250, 32)";
+                }
+              })
+              .labelResolution(2)(document.getElementById("globeViz")); //resolution des labels
+
+            //affiche le nom du site au passage de la souris
+            globeInstance.onLabelHover((label, prevLabel) => {
+              if (label) {
+                bottomText.innerText = `${label.name_en}`;
+              } else {
+                //si aucun label n'est touché
+                bottomText.innerText = "";
               }
-            })
-            .labelResolution(2)(document.getElementById("globeViz")); //resolution des labels
+            });
 
-          //affiche le nom du site au passage de la souris
-          globeInstance.onLabelHover((label, prevLabel) => {
-            if (label) {
-              bottomText.innerText = `${label.name_en}`;
-            } else {
-              //si aucun label n'est touché
-              bottomText.innerText = "";
-            }
+            //Redirection vers le site conernant le site quand le point est cliqué
+            globeInstance.onLabelClick((label, event, coords) => {
+              window.open(label.link, "_blank");
+            });
+
+            //Point de vue par défaut (centré sur l'europe)
+            globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 2 });
           });
-
-          //Redirection vers le site conernant le site quand le point est cliqué
-          globeInstance.onLabelClick((label, event, coords) => {
-            window.open(label.link, "_blank");
-          });
-
-          //Point de vue par défaut (centré sur l'europe)
-          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 2 });
-        });
+      }
 
       //Zoom sur le pays entré (en anglais) dans la barre de recherche (avec animation)
       function goToCountry() {
@@ -163,6 +167,24 @@
               else {
                 console.log("Pays non trouvé dans le JSON.");
               }
+            }
+          });
+      }
+      function countryPoint() {
+        var inputCountry = document.getElementById("countrySearch").value;
+        fetch("datasets/real_planet_unesco.json")
+          .then((response) => response.json())
+          .then((places) => {
+            const filteredPlaces = places.filter(
+              (place) =>
+                place.states_name_en.toLowerCase() ===
+                inputCountry.toLowerCase()
+            );
+            if (filteredPlaces) {
+              globeInstance.labelsData(filteredPlaces);
+              goToCountry();
+            } else {
+              console.log("Aucun site trouvé pour ce pays.");
             }
           });
       }
