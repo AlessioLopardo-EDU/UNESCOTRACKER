@@ -15,6 +15,8 @@ jobs:
       - run: git checkout main
       - run: git checkout -b "Test"
       - run: git fetch
-      - run: git branch --set-upstream-to=origin/Test2 Test
+      - run: git branch --set-upstream-to=origin/Test
       - run: git clone https://github.com/quemet/I165-NoSQL
+      - run: git fetch
+      - run: git branch --set-upstream-to=origin/Test
       - run: git branch -d "Test"
