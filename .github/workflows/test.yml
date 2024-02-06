@@ -5,13 +5,13 @@ on: [push]
 jobs:
   Build:
     name: FirstBuild
-    runs-on: windows-lastest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout2
         uses: actions/checkout@v4
         with:
-          node-version: lastest
+          node-version: latest
       - run: git checkout -b "Test2"
       - run: git checkout main
       - run: git clone UNESCOTRACKER
