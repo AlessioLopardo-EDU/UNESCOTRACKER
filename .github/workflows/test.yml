@@ -14,5 +14,6 @@ jobs:
           node-version: latest
       - run: git checkout main
       - run: git checkout -b "Test"
+      - run: git pull
       - run: git clone https://github.com/quemet/I165-NoSQL
       - run: git branch -d "Test"
