@@ -15,4 +15,5 @@ jobs:
       - run: git checkout -b "Test2"
       - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
       - run: git checkout main
-      - run: sudo apt-get install python3.7
+      - run: sudo apt update
+      - run: sudo apt install Node.js
