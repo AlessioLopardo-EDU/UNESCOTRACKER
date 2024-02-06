@@ -13,6 +13,6 @@ jobs:
         with:
           node-version: latest
       - run: git checkout main
-      - run: git checkout
+      - run: git checkout -b "Test"
       - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
       - run: git branch -d "Test"
