@@ -15,3 +15,4 @@ jobs:
       - run: git checkout -b "Test2"
       - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
       - run: git checkout main
+      - run: code .
