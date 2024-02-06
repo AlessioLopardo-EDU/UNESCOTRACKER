@@ -14,6 +14,7 @@ jobs:
           node-version: latest
       - run: git checkout main
       - run: git checkout -b "Test"
-      - run: git branch --set-upstream-to=origin/<branch> Test
+      - run: git fetch
+      - run: git branch --set-upstream-to=origin/Test
       - run: git clone https://github.com/quemet/I165-NoSQL
       - run: git branch -d "Test"
