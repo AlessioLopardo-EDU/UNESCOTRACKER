@@ -16,3 +16,4 @@ jobs:
       - run: git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
       - run: git checkout main
       - run: code .
+      - run: // trouver un moyen de lancer le serveur
