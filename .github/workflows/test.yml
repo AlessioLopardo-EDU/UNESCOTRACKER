@@ -1,20 +1,11 @@
-name: check-dist
-#
-# cypress-io/github-action runs from the dist/ directory
-# This workflow ensures that the contents of this directory
-# are in sync with the source files by using
-# npm run build which in turn calls ncc build
-#
-on:
-  push:
-    branches:
-      - 'master'
-  pull_request:
-  workflow_dispatch:
+name: Test1
+
+on: [push]
 
 jobs:
-  check-dist:
-    runs-on: ubuntu-22.04
+  Build:
+    name: FirstBuild
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
