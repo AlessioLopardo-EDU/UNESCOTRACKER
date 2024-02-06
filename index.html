@@ -29,6 +29,21 @@
       .Pnatural:hover {
         cursor: pointer;
       }
+
+      .bottom-text {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 40px;
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: 0.1ms;
+        background-color: rgba(255, 255, 255, 0.445);
+        padding: 10px;
+        border-radius: 9px;
+        color: white;
+        display: inline-block;
+      }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
   </head>
@@ -47,10 +62,16 @@
 
     <div id="globeViz"></div>
 
+    <div class="bottom-text" id="bottomText">
+      <a id="labelLink" href="#" target="_blank"></a>
+    </div>
+
     <script>
       let category;
       let i;
       let globeInstance; // Declare globeInstance in the global scope
+
+      let bottomText = document.getElementById("bottomText");
 
       // Fichier json contenant toutes les infos
       fetch("datasets/real_planet_unesco.json")
@@ -58,9 +79,7 @@
         .then((places) => {
           // Initialisation globe
           globeInstance = Globe()
-            .globeImageUrl(
-              "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-            )
+            .globeImageUrl("./src/img/betterquality.png")
             .backgroundImageUrl(
               "//unpkg.com/three-globe/example/img/night-sky.png"
             )
@@ -80,6 +99,14 @@
               }
             })
             .labelResolution(2)(document.getElementById("globeViz"));
+
+          globeInstance.onLabelHover((label, prevLabel) => {
+            if (label) {
+              bottomText.innerText = `${label.name_en}`;
+            } else {
+              bottomText.innerText = "";
+            }
+          });
 
           globeInstance.onLabelClick((label, event, coords) => {
             window.open(label.link, "_blank");
