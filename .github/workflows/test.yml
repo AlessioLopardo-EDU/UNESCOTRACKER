@@ -11,12 +11,11 @@ jobs:
       - name: Checkout2
         uses: actions/checkout@v4
         with:
-          node-version: latest
-      - run: git checkout main
-      - run: git checkout -b "Test"
-      - run: git fetch
-      - run: git branch --set-upstream-to=origin/Test
-      - run: git clone https://github.com/quemet/I165-NoSQL
-      - run: git fetch
-      - run: git branch --set-upstream-to=origin/Test
-      - run: git branch -d "Test"
+          node-version: 'latest'
+      
+      # Étape pour supprimer la branche "Test"
+      - name: Delete branch 'Test'
+        run: git push origin --delete Test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
