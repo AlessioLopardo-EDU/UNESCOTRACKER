@@ -176,6 +176,48 @@
           console.error("Erreur lors du chargement des sites UNESCO :", error)
         );
 
+      document
+        .getElementById("sitesDropdown")
+        .addEventListener("change", function () {
+          zoomToSelectedSite(this.value); // Appelle la fonction pour zoomer sur le site sélectionné
+        });
+
+      function zoomToSelectedSite(selectedSite) {
+        fetch("datasets/real_planet_unesco.json")
+          .then((res) => res.json())
+          .then((places) => {
+            const selectedSiteData = places.find(
+              (site) => site.name_en === selectedSite
+            );
+
+            if (selectedSiteData) {
+              globeInstance.pointOfView(
+                {
+                  lat: selectedSiteData.latitude,
+                  lng: selectedSiteData.longitude,
+                  altitude: 2,
+                },
+                3000
+              );
+
+              // Delay for 3000 milliseconds (3 seconds) before zooming in
+              setTimeout(() => {
+                // Zoom in
+                globeInstance.pointOfView(
+                  {
+                    lat: selectedSiteData.latitude,
+                    lng: selectedSiteData.longitude,
+                    altitude: 0.3,
+                  },
+                  3000
+                );
+              }, 3000);
+            } else {
+              console.log("Site non trouvé dans le JSON.");
+            }
+          });
+      }
+
       function goToCountry() {
         var inputCountry = document.getElementById("countrySearch").value;
         fetch("datasets/countries-positions.json")
