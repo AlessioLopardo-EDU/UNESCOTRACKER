@@ -195,23 +195,10 @@
                 {
                   lat: selectedSiteData.latitude,
                   lng: selectedSiteData.longitude,
-                  altitude: 2,
+                  altitude: 0.3,
                 },
                 3000
               );
-
-              // Delay for 3000 milliseconds (3 seconds) before zooming in
-              setTimeout(() => {
-                // Zoom in
-                globeInstance.pointOfView(
-                  {
-                    lat: selectedSiteData.latitude,
-                    lng: selectedSiteData.longitude,
-                    altitude: 0.3,
-                  },
-                  3000
-                );
-              }, 3000);
             } else {
               console.log("Site non trouvé dans le JSON.");
             }
