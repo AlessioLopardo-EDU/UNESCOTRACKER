@@ -1,0 +1,22 @@
+name: Nettoyage après fusion
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete_branch:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Suppression de la branche
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'heads/' + context.payload.pull_request.head.ref,
+            })
+          github_token: ${{ secrets.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 }}
+
