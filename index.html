@@ -135,6 +135,13 @@
         border-radius: 10px;
         border: none;
       }
+
+      #suggestion {
+        color: white;
+        display: flex;
+        flex-direction: column;
+        font-size: medium;
+      }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
   </head>
@@ -153,6 +160,7 @@
       <!--Bouton de redirection vers pays entré-->
       <button onclick="countryPoint()">Aller au pays</button>
       <button onclick="allCountry()">Afficher les sites</button>
+      <div id="suggestion"></div>
     </div>
 
     <div class="dropdown-container">
@@ -373,6 +381,27 @@
             }
           });
       }
+
+      const searchInput = document.getElementById("countrySearch");
+      searchInput.addEventListener("keyup", function () {
+        const input = searchInput.value;
+
+        fetch("datasets/countries-positions.json")
+          .then((response) => response.json())
+          .then((jsonData) => {
+            const result = jsonData.ref_country_codes.filter((place) =>
+              place.country.toLowerCase().includes(input.toLowerCase())
+            );
+            console.log(result);
+            let suggestion = "";
+            if (input != "") {
+              result.forEach((resultItem) => {
+                suggestion += `<div class="suggestion">${resultItem.country}</div>`;
+              });
+            }
+            document.getElementById("suggestion").innerHTML = suggestion;
+          });
+      });
     </script>
   </body>
 </html>
