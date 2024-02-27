@@ -154,7 +154,7 @@
       />
       <!--Bouton de redirection vers pays entré-->
       <button id="btnSearch" onclick="countryPoint()">Aller au pays</button>
-      <button onclick="allCountry()">Afficher les sites</button>
+      <button id="btnReset" onclick="allCountry()">Afficher les sites</button>
     </div>
 
     <div class="dropdown-container">
@@ -359,21 +359,26 @@
       }
       function countryPoint() {
         var inputCountry = document.getElementById("countrySearch").value;
-        fetch("datasets/real_planet_unesco.json")
-          .then((response) => response.json())
-          .then((places) => {
-            const filteredPlaces = places.filter(
-              (place) =>
-                place.states_name_en.toLowerCase() ===
-                inputCountry.toLowerCase()
-            );
-            if (filteredPlaces) {
-              globeInstance.labelsData(filteredPlaces);
-              goToCountry();
-            } else {
-              console.log("Aucun site trouvé pour ce pays.");
-            }
-          });
+
+        if (inputCountry == "") {
+          $("#btnReset").click();
+        } else {
+          fetch("datasets/real_planet_unesco.json")
+            .then((response) => response.json())
+            .then((places) => {
+              const filteredPlaces = places.filter(
+                (place) =>
+                  place.states_name_en.toLowerCase() ===
+                  inputCountry.toLowerCase()
+              );
+              if (filteredPlaces) {
+                globeInstance.labelsData(filteredPlaces);
+                goToCountry();
+              } else {
+                console.log("Aucun site trouvé pour ce pays.");
+              }
+            });
+        }
       }
 
       $(document).ready(function () {
