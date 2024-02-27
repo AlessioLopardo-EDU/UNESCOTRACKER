@@ -142,10 +142,6 @@
           });
       }
 
-          //Point de vue par défaut (centré sur l'europe)
-          globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 0.8 });
-        });
-
       // Chargez le fichier JSON des sites UNESCO
       fetch("datasets/real_planet_unesco.json")
         .then((response) => response.json())
