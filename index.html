@@ -290,6 +290,20 @@
                 },
                 3000
               );
+
+              var site = selectedSite;
+              fetch("datasets/real_planet_unesco.json")
+                .then((response) => response.json())
+                .then((places) => {
+                  const filteredPlaces = places.filter(
+                    (place) =>
+                      place.name_en.toLowerCase() === selectedSite.toLowerCase()
+                  );
+                  if (filteredPlaces) {
+                    globeInstance.labelsData(filteredPlaces);
+                    goToCountry();
+                  }
+                });
             } else {
               console.log("Site non trouvé dans le JSON.");
             }
