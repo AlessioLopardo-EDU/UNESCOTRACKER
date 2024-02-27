@@ -24,11 +24,6 @@
       .Pmixed {
         color: rgb(246, 250, 32);
       }
-      .Pmixed,
-      .Pcultural,
-      .Pnatural:hover {
-        cursor: pointer;
-      }
 
       .bottom-text {
         font-family: Arial, Helvetica, sans-serif;
@@ -37,7 +32,6 @@
         bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
-        transition: 0.1ms;
         background-color: rgba(255, 255, 255, 0.445);
         padding: 10px;
         border-radius: 9px;
@@ -123,12 +117,17 @@
         text-align: center;
         color: white;
         font-size: 14px;
+
       }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
   </head>
   <body>
     <div class="test">
+      <p onclick="culturalClick()" class="Pcultural">• Cultural</p>
+      <p onclick="naturalClick()" class="Pnatural">• Natural</p>
+      <p onclick="mixedClick()" class="Pmixed">• Mixed</p>
+
       <!--Barre de recherche de pays-->
       <input
         type="text"
@@ -140,6 +139,9 @@
       <button onclick="allCountry()">Afficher les sites</button>
     </div>
 
+    <div class="dropdown-container">
+      <select id="sitesDropdown"></select>
+    </div>
     <div id="globeViz"></div>
 
     <!--Texte affiché quand la souris passe par dessus un site-->
@@ -201,6 +203,80 @@
 
             //Point de vue par défaut (centré sur l'europe)
             globeInstance.pointOfView({ lat: 47, lng: 18, altitude: 2 });
+          });
+      }
+
+      // Chargez le fichier JSON des sites UNESCO
+      fetch("datasets/real_planet_unesco.json")
+        .then((response) => response.json())
+        .then((sitesData) => {
+          // Récupérez l'élément dropdown
+          const dropdown = document.getElementById("sitesDropdown");
+
+          // Créez un objet pour stocker les sites par pays
+          const sitesByCountry = {};
+
+          // Bouclez sur les données des sites UNESCO
+          sitesData.forEach((site) => {
+            // Vérifiez si le pays existe dans l'objet
+            if (!sitesByCountry[site.states_name_en]) {
+              sitesByCountry[site.states_name_en] = [];
+            }
+
+            // Ajoutez le site au tableau correspondant au pays
+            sitesByCountry[site.states_name_en].push(site);
+          });
+
+          // Bouclez sur les pays et créez les groupes et options
+          for (const country in sitesByCountry) {
+            if (sitesByCountry.hasOwnProperty(country)) {
+              // Créez un groupe d'options pour chaque pays
+              const optgroup = document.createElement("optgroup");
+              optgroup.label = country;
+
+              // Ajoutez les options pour chaque site du pays
+              sitesByCountry[country].forEach((site) => {
+                const option = document.createElement("option");
+                option.value = site.name_en;
+                option.text = site.name_en;
+                optgroup.appendChild(option);
+              });
+
+              // Ajoutez le groupe d'options au dropdown
+              dropdown.appendChild(optgroup);
+            }
+          }
+        })
+        .catch((error) =>
+          console.error("Erreur lors du chargement des sites UNESCO :", error)
+        );
+
+      document
+        .getElementById("sitesDropdown")
+        .addEventListener("change", function () {
+          zoomToSelectedSite(this.value); // Appelle la fonction pour zoomer sur le site sélectionné
+        });
+
+      function zoomToSelectedSite(selectedSite) {
+        fetch("datasets/real_planet_unesco.json")
+          .then((res) => res.json())
+          .then((places) => {
+            const selectedSiteData = places.find(
+              (site) => site.name_en === selectedSite
+            );
+
+            if (selectedSiteData) {
+              globeInstance.pointOfView(
+                {
+                  lat: selectedSiteData.latitude,
+                  lng: selectedSiteData.longitude,
+                  altitude: 0.3,
+                },
+                3000
+              );
+            } else {
+              console.log("Site non trouvé dans le JSON.");
+            }
           });
       }
 
