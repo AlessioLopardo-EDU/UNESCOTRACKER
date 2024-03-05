@@ -161,8 +161,8 @@
         id="countrySearch"
       />
       <!--Bouton de redirection vers pays entré-->
-      <button onclick="countryPoint()">Aller au pays</button>
-      <button onclick="allCountry()">Afficher les sites</button>
+      <button id="btnSearch" onclick="countryPoint()">Aller au pays</button>
+      <button id="btnReset" onclick="allCountry()">Afficher les sites</button>
       <div id="suggestion"></div>
     </div>
 
@@ -357,11 +357,15 @@
                   );
                 }, 3000);
               }
+              if (inputCountry == "") {
+                allCountry();
+              }
               //Si le pays n'est pas trouvé
-              else {
+              else if (!countryData) {
                 alert(
                   "Le site que vous avez saisi est incorrect, veuillez en entrer un autre."
                 );
+                allCountry();
               }
             }
           });
@@ -384,6 +388,14 @@
           });
       }
 
+      $(document).ready(function () {
+        $("#countrySearch").keypress(function (e) {
+          if (e.keyCode == 13) {
+            $("#btnSearch").click();
+          }
+        });
+      });
+
       // Suggestion dans la bare de recherche
       const searchInput = document.getElementById("countrySearch");
       searchInput.addEventListener("keyup", function () {
@@ -404,35 +416,21 @@
             document.getElementById("suggestion").innerHTML = suggestion;
           });
 
-
-        if (inputCountry == "") {
-          $("#btnReset").click();
-        } else {
-          fetch("datasets/real_planet_unesco.json")
-            .then((response) => response.json())
-            .then((places) => {
-              const filteredPlaces = places.filter(
-                (place) =>
-                  place.states_name_en.toLowerCase() ===
-                  inputCountry.toLowerCase()
-              );
-              if (filteredPlaces) {
-                globeInstance.labelsData(filteredPlaces);
-                goToCountry();
-              } else {
-                console.log("Aucun site trouvé pour ce pays.");
-              }
-            });
-        }
-      }
-
-      $(document).ready(function () {
-        $("#countrySearch").keypress(function (e) {
-          if (e.keyCode == 13) {
-            $("#btnSearch").click();
-          }
-        });
-
+        fetch("datasets/real_planet_unesco.json")
+          .then((response) => response.json())
+          .then((places) => {
+            const filteredPlaces = places.filter(
+              (place) =>
+                place.states_name_en.toLowerCase() ===
+                inputCountry.toLowerCase()
+            );
+            if (filteredPlaces) {
+              globeInstance.labelsData(filteredPlaces);
+              goToCountry();
+            } else {
+              console.log("Aucun site trouvé pour ce pays.");
+            }
+          });
       });
     </script>
   </body>
