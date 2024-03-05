@@ -141,6 +141,7 @@
         display: flex;
         flex-direction: column;
         font-size: medium;
+        max-height: 20px;
       }
     </style>
     <script src="//unpkg.com/globe.gl"></script>
@@ -311,8 +312,6 @@
                     globeInstance.labelsData(filteredPlaces);
                   }
                 });
-            } else {
-              console.log("Site non trouvé dans le JSON.");
             }
           });
       }
@@ -358,7 +357,9 @@
               }
               //Si le pays n'est pas trouvé
               else {
-                console.log("Pays non trouvé dans le JSON.");
+                alert(
+                  "Le site que vous avez saisi est incorrect, veuillez en entrer un autre."
+                );
               }
             }
           });
@@ -376,12 +377,11 @@
             if (filteredPlaces) {
               globeInstance.labelsData(filteredPlaces);
               goToCountry();
-            } else {
-              console.log("Aucun site trouvé pour ce pays.");
             }
           });
       }
 
+      // Suggestion dans la bare de recherche
       const searchInput = document.getElementById("countrySearch");
       searchInput.addEventListener("keyup", function () {
         const input = searchInput.value;
@@ -392,7 +392,6 @@
             const result = jsonData.ref_country_codes.filter((place) =>
               place.country.toLowerCase().includes(input.toLowerCase())
             );
-            console.log(result);
             let suggestion = "";
             if (input != "") {
               result.forEach((resultItem) => {
