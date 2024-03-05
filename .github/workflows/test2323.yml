@@ -1,23 +1,20 @@
-name: Test1
-
-on: [push]
-
+name: Supprimer une branche spécifique
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: 'Test à supprimer'
+        required: true
+        default: 'Test'
+ 
 jobs:
-  Build:
-    name: FirstBuild
-    runs-on: windows-latest
-
+  delete_branch:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout2
-        uses: actions/checkout@v4
-        with:
-          node-version: 'latest'
-      
-
-      
-      # Étape pour supprimer la branche "Test"
-      - name: Delete branch 'Test'
-        run: git push origin --delete 
+      - name: Suppression de la branche
+        run: |
+          echo "Suppression de la branche ${{ github.event.inputs.Test }}"
+          git push origin --delete ${{ github.event.inputs.Test }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          GITHUB_TOKEN: ${{ secrets.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 }}

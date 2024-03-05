@@ -1,7 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
     <link rel="stylesheet" href="./style.css" />
+=======
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .test {
+        display: block;
+        position: fixed;
+        z-index: 200;
+        padding: 20px;
+        font-size: 40px;
+        font-family: "Trebuchet MS", sans-serif;
+      }
+
+      .Pcultural {
+        color: rgb(128, 189, 255);
+      }
+      .Pnatural {
+        color: rgb(42, 245, 48);
+      }
+      .Pmixed {
+        color: rgb(246, 250, 32);
+      }
+
+      .bottom-text {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 40px;
+        position: fixed;
+        right: 20px;
+        top: 70px;
+        transform: translateX(-50%);
+        background-color: rgba(255, 255, 255, 0);
+        padding: 10px;
+        border-radius: 9px;
+        color: white;
+        display: inline-block;
+      }
+      .search-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+      }
+
+      #countrySearch {
+        flex-grow: 1;
+        margin-right: 1px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #a64fc0;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        background-color: #a64fc0;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #a04582;
+      }
+
+      /**********CHECK PAYS VISITES*************/
+      .filter-container {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 200;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: #a64fc0;
+      }
+
+      .filter-container label {
+        cursor: pointer;
+        display: block;
+      }
+
+      .filter-container input[type="checkbox"] {
+        margin-left: 10px;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+      }
+
+      .filter-container input[type="checkbox"]:checked {
+        background-color: #a64fc0;
+      }
+
+      .filter-container input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: 2px solid #a64fc0;
+        border-radius: 3px;
+        padding: 5px;
+      }
+
+      .filter-container input[type="checkbox"]:checked:after {
+        content: "✔";
+        display: block;
+        text-align: center;
+        color: white;
+        font-size: 14px;
+      }
+      .dropdown-container {
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        position: fixed;
+        z-index: 200;
+        padding: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      #sitesDropdown {
+        font-size: 12px;
+        padding: 12px;
+        background-color: rgba(255, 255, 255, 0.562);
+        border-radius: 10px;
+        border: none;
+      }
+
+      #suggestion {
+        color: white;
+        display: flex;
+        flex-direction: column;
+        font-size: medium;
+        max-height: 20px;
+      }
+    </style>
+
     <script src="//unpkg.com/globe.gl"></script>
   </head>
   <body>
@@ -17,8 +165,9 @@
         id="countrySearch"
       />
       <!--Bouton de redirection vers pays entré-->
-      <button onclick="countryPoint()">Aller au pays</button>
-      <button onclick="allCountry()">Afficher les sites</button>
+      <button id="btnSearch" onclick="countryPoint()">Aller au pays</button>
+      <button id="btnReset" onclick="allCountry()">Afficher les sites</button>
+      <div id="suggestion"></div>
     </div>
 
     <div class="dropdown-container">
@@ -27,9 +176,7 @@
     <div id="globeViz"></div>
 
     <!--Texte affiché quand la souris passe par dessus un site-->
-    <div class="bottom-text" id="bottomText">
-      <a id="labelLink" href="#" target="_blank"></a>
-    </div>
+    <div class="bottom-text" id="bottomText"></div>
 
     <script>
       allCountry();
@@ -70,11 +217,48 @@
 
             //affiche le nom du site au passage de la souris
             globeInstance.onLabelHover((label, prevLabel) => {
+              const bottomText = document.getElementById("bottomText");
+
               if (label) {
-                bottomText.innerText = `${label.name_en}`;
+                const title = document.createElement("p");
+                title.innerText = label.name_en;
+                title.style.fontSize = "22px";
+                title.style.textAlign = "center";
+                title.style.fontWeight = "1000";
+
+                const imageContainer = document.createElement("div");
+                imageContainer.style.position = "fixed";
+                imageContainer.style.top = "20px";
+                imageContainer.style.right = "20px";
+                imageContainer.style.width = "400px";
+                imageContainer.style.padding = "10px";
+                imageContainer.style.background = "rgba(255, 255, 255, 0.562)";
+                imageContainer.style.borderRadius = "10px";
+                imageContainer.style.boxShadow =
+                  "rgb(38, 57, 77) 0px 20px 30px -10px;";
+
+                const image = new Image();
+                image.src = label.image;
+                image.style.width = "100%";
+                image.style.height = "auto";
+                image.style.maxHeight = "600px";
+                image.style.borderRadius = "20px";
+                image.style.boxShadow = "rgb(38, 57, 77) 0px 20px 30px -10px;";
+
+                const description = document.createElement("p");
+                description.innerHTML = label.short_description_en;
+                description.style.fontSize = "15px";
+
+                imageContainer.appendChild(title);
+                imageContainer.appendChild(image);
+                imageContainer.appendChild(description);
+
+                // Replace the content of bottomText with the image and description
+                bottomText.innerHTML = "";
+                bottomText.appendChild(imageContainer);
               } else {
-                //si aucun label n'est touché
-                bottomText.innerText = "";
+                // Clear bottomText if no label is hovered
+                bottomText.innerHTML = "";
               }
             });
 
@@ -156,8 +340,19 @@
                 },
                 3000
               );
-            } else {
-              console.log("Site non trouvé dans le JSON.");
+
+              var site = selectedSite;
+              fetch("datasets/real_planet_unesco.json")
+                .then((response) => response.json())
+                .then((places) => {
+                  const filteredPlaces = places.filter(
+                    (place) =>
+                      place.name_en.toLowerCase() === selectedSite.toLowerCase()
+                  );
+                  if (filteredPlaces) {
+                    globeInstance.labelsData(filteredPlaces);
+                  }
+                });
             }
           });
       }
@@ -201,9 +396,15 @@
                   );
                 }, 3000);
               }
+              if (inputCountry == "") {
+                allCountry();
+              }
               //Si le pays n'est pas trouvé
-              else {
-                console.log("Pays non trouvé dans le JSON.");
+              else if (!countryData) {
+                alert(
+                  "Le site que vous avez saisi est incorrect, veuillez en entrer un autre."
+                );
+                allCountry();
               }
             }
           });
@@ -211,6 +412,50 @@
       //
       function countryPoint() {
         var inputCountry = document.getElementById("countrySearch").value;
+
+        fetch("datasets/real_planet_unesco.json")
+          .then((response) => response.json())
+          .then((places) => {
+            const filteredPlaces = places.filter(
+              (place) =>
+                place.states_name_en.toLowerCase() ===
+                inputCountry.toLowerCase()
+            );
+            if (filteredPlaces) {
+              globeInstance.labelsData(filteredPlaces);
+              goToCountry();
+            }
+          });
+      }
+
+      $(document).ready(function () {
+        $("#countrySearch").keypress(function (e) {
+          if (e.keyCode == 13) {
+            $("#btnSearch").click();
+          }
+        });
+      });
+
+      // Suggestion dans la bare de recherche
+      const searchInput = document.getElementById("countrySearch");
+      searchInput.addEventListener("keyup", function () {
+        const input = searchInput.value;
+
+        fetch("datasets/countries-positions.json")
+          .then((response) => response.json())
+          .then((jsonData) => {
+            const result = jsonData.ref_country_codes.filter((place) =>
+              place.country.toLowerCase().includes(input.toLowerCase())
+            );
+            let suggestion = "";
+            if (input != "") {
+              result.forEach((resultItem) => {
+                suggestion += `<div class="suggestion">${resultItem.country}</div>`;
+              });
+            }
+            document.getElementById("suggestion").innerHTML = suggestion;
+          });
+
         fetch("datasets/real_planet_unesco.json")
           .then((response) => response.json())
           .then((places) => {
@@ -226,7 +471,7 @@
               console.log("Aucun site trouvé pour ce pays.");
             }
           });
-      }
+      });
     </script>
   </body>
 </html>
