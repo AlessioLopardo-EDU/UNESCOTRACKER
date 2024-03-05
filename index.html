@@ -58,11 +58,11 @@
               .labelDotRadius(0.21) //taille points
               //couleurs selon les categories
               .labelColor((d) => {
-                if (d.category == "Culturel") {
+                if (d.category == "Cultural") {
                   return "rgb(128, 189, 255)";
-                } else if (d.category == "Naturel") {
+                } else if (d.category == "Natural") {
                   return "rgb(42, 245, 48)";
-                } else if (d.category == "Mixte") {
+                } else if (d.category == "Mixed") {
                   return "rgb(246, 250, 32)";
                 }
               })
@@ -162,7 +162,7 @@
           });
       }
 
-      //Zoom sur le pays entré (en anglais) dans la barre de recherche (avec animation)
+      //Zoom sur le pays entré (en français) dans la barre de recherche (avec animation)
       function goToCountry() {
         var inputCountry = document.getElementById("countrySearch").value; //pays entré
         fetch("datasets/countries-positions.json") //prend le fichier comprenant les positions de tout les pays du monde
@@ -208,6 +208,7 @@
             }
           });
       }
+      //
       function countryPoint() {
         var inputCountry = document.getElementById("countrySearch").value;
         fetch("datasets/real_planet_unesco.json")
