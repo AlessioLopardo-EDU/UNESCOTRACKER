@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
+    <link rel="stylesheet" href="./style.css" />
+=======
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <style>
@@ -146,6 +149,7 @@
         max-height: 20px;
       }
     </style>
+
     <script src="//unpkg.com/globe.gl"></script>
   </head>
   <body>
@@ -353,7 +357,7 @@
           });
       }
 
-      //Zoom sur le pays entré (en anglais) dans la barre de recherche (avec animation)
+      //Zoom sur le pays entré (en français) dans la barre de recherche (avec animation)
       function goToCountry() {
         var inputCountry = document.getElementById("countrySearch").value; //pays entré
         fetch("datasets/countries-positions.json") //prend le fichier comprenant les positions de tout les pays du monde
@@ -405,6 +409,7 @@
             }
           });
       }
+      //
       function countryPoint() {
         var inputCountry = document.getElementById("countrySearch").value;
 
