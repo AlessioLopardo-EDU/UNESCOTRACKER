@@ -31,10 +31,10 @@
         font-family: Arial, Helvetica, sans-serif;
         font-size: 40px;
         position: fixed;
-        bottom: 50px;
-        left: 50%;
+        right: 20px;
+        top: 70px;
         transform: translateX(-50%);
-        background-color: rgba(255, 255, 255, 0.445);
+        background-color: rgba(255, 255, 255, 0);
         padding: 10px;
         border-radius: 9px;
         color: white;
@@ -163,9 +163,7 @@
     <div id="globeViz"></div>
 
     <!--Texte affiché quand la souris passe par dessus un site-->
-    <div class="bottom-text" id="bottomText">
-      <a id="labelLink" href="#" target="_blank"></a>
-    </div>
+    <div class="bottom-text" id="bottomText"></div>
 
     <script>
       allCountry();
@@ -206,11 +204,46 @@
 
             //affiche le nom du site au passage de la souris
             globeInstance.onLabelHover((label, prevLabel) => {
+              const bottomText = document.getElementById("bottomText");
+
               if (label) {
-                bottomText.innerText = `${label.name_en}`;
+                const title = document.createElement("p");
+                title.innerText = label.name_en;
+                title.style.fontSize = "22px";
+                title.style.textAlign = "center";
+                title.style.fontWeight = "1000";
+
+                const imageContainer = document.createElement("div");
+                imageContainer.style.position = "fixed";
+                imageContainer.style.top = "20px";
+                imageContainer.style.right = "20px";
+                imageContainer.style.width = "400px";
+                imageContainer.style.padding = "10px";
+                imageContainer.style.background = "rgba(255, 255, 255, 0.562)";
+                imageContainer.style.borderRadius = "10px";
+                imageContainer.style.boxShadow =
+                  "rgb(38, 57, 77) 0px 20px 30px -10px;";
+
+                const image = new Image();
+                image.src = label.image;
+                image.style.width = "100%";
+                image.style.height = "auto";
+                image.style.maxHeight = "600px";
+
+                const description = document.createElement("p");
+                description.innerHTML = label.short_description_en;
+                description.style.fontSize = "15px";
+
+                imageContainer.appendChild(title);
+                imageContainer.appendChild(image);
+                imageContainer.appendChild(description);
+
+                // Replace the content of bottomText with the image and description
+                bottomText.innerHTML = "";
+                bottomText.appendChild(imageContainer);
               } else {
-                //si aucun label n'est touché
-                bottomText.innerText = "";
+                // Clear bottomText if no label is hovered
+                bottomText.innerHTML = "";
               }
             });
 
