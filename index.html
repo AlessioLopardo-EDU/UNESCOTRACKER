@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <style>
       body {
         margin: 0;
@@ -366,6 +368,7 @@
       }
       function countryPoint() {
         var inputCountry = document.getElementById("countrySearch").value;
+
         fetch("datasets/real_planet_unesco.json")
           .then((response) => response.json())
           .then((places) => {
@@ -400,6 +403,36 @@
             }
             document.getElementById("suggestion").innerHTML = suggestion;
           });
+
+
+        if (inputCountry == "") {
+          $("#btnReset").click();
+        } else {
+          fetch("datasets/real_planet_unesco.json")
+            .then((response) => response.json())
+            .then((places) => {
+              const filteredPlaces = places.filter(
+                (place) =>
+                  place.states_name_en.toLowerCase() ===
+                  inputCountry.toLowerCase()
+              );
+              if (filteredPlaces) {
+                globeInstance.labelsData(filteredPlaces);
+                goToCountry();
+              } else {
+                console.log("Aucun site trouvé pour ce pays.");
+              }
+            });
+        }
+      }
+
+      $(document).ready(function () {
+        $("#countrySearch").keypress(function (e) {
+          if (e.keyCode == 13) {
+            $("#btnSearch").click();
+          }
+        });
+
       });
     </script>
   </body>
