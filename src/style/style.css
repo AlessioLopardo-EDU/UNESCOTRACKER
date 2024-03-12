@@ -1,0 +1,141 @@
+body {
+  margin: 0;
+}
+
+.test {
+  display: block;
+  position: fixed;
+  z-index: 200;
+  padding: 20px;
+  font-size: 40px;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+.Pcultural {
+  color: rgb(128, 189, 255);
+}
+.Pnatural {
+  color: rgb(42, 245, 48);
+}
+.Pmixed {
+  color: rgb(246, 250, 32);
+}
+
+.bottom-text {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 40px;
+  position: fixed;
+  right: 20px;
+  top: 70px;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0);
+  padding: 10px;
+  border-radius: 9px;
+  color: white;
+  display: inline-block;
+}
+.search-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+#countrySearch {
+  flex-grow: 1;
+  margin-right: 1px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #a64fc0;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #a64fc0;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a04582;
+}
+
+/**********CHECK PAYS VISITES*************/
+.filter-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #a64fc0;
+}
+
+.filter-container label {
+  cursor: pointer;
+  display: block;
+}
+
+.filter-container input[type="checkbox"] {
+  margin-left: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.filter-container input[type="checkbox"]:checked {
+  background-color: #a64fc0;
+}
+
+.filter-container input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid #a64fc0;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.filter-container input[type="checkbox"]:checked:after {
+  content: "✔";
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+}
+.dropdown-container {
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  position: fixed;
+  z-index: 200;
+  padding: 0px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#sitesDropdown {
+  font-size: 12px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.562);
+  border-radius: 10px;
+  border: none;
+}
+
+#suggestion {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-size: medium;
+  max-height: 20px;
+}
