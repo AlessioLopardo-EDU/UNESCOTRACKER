@@ -166,6 +166,7 @@
       <div id="suggestion"></div>
     </div>
 
+    <!--Menu déroulant contenant les sites-->
     <div class="dropdown-container">
       <select id="sitesDropdown"></select>
     </div>
@@ -177,12 +178,13 @@
     <script>
       allCountry();
       let i;
-      let globeInstance; // Declare globeInstance in the global scope
+      let globeInstance;
 
+      //Charge toutes les données et affiches tout les sites unesco
       function allCountry() {
         let bottomText = document.getElementById("bottomText");
 
-        // Fichier json contenant toutes les infos
+        // Fichier json contenant toutes les infos des sites unesco
         fetch("datasets/real_planet_unesco.json")
           .then((res) => res.json())
           .then((places) => {
@@ -197,9 +199,9 @@
               .labelLat((d) => d.latitude)
               .labelLng((d) => d.longitude)
               .labelText((d) => d.name_en)
-              .labelSize(0)
+              .labelSize(0) //ne pas afficher de texte avec les points
               .labelDotRadius(0.21) //taille points
-              //couleurs selon les categories
+              //couleurs selon les categories de site (culturel, naturel, mix)
               .labelColor((d) => {
                 if (d.category == "Cultural") {
                   return "rgb(128, 189, 255)";
@@ -213,46 +215,52 @@
 
             //affiche le nom du site au passage de la souris
             globeInstance.onLabelHover((label, prevLabel) => {
-              const bottomText = document.getElementById("bottomText");
+              const CONTENTDIV = document.getElementById("bottomText");
 
+              //Affiche le titre, l'image et la description du site dans une div
               if (label) {
-                const title = document.createElement("p");
-                title.innerText = label.name_en;
-                title.style.fontSize = "22px";
-                title.style.textAlign = "center";
-                title.style.fontWeight = "1000";
+                //Titre
+                const TITLE = document.createElement("p");
+                TITLE.innerText = label.name_en;
+                TITLE.style.fontSize = "22px";
+                TITLE.style.textAlign = "center";
+                TITLE.style.fontWeight = "1000";
 
-                const imageContainer = document.createElement("div");
-                imageContainer.style.position = "fixed";
-                imageContainer.style.top = "20px";
-                imageContainer.style.right = "20px";
-                imageContainer.style.width = "400px";
-                imageContainer.style.padding = "10px";
-                imageContainer.style.background = "rgba(255, 255, 255, 0.562)";
-                imageContainer.style.borderRadius = "10px";
-                imageContainer.style.boxShadow =
+                //Div
+                const IMAGECONTAINER = document.createElement("div");
+                IMAGECONTAINER.style.position = "fixed";
+                IMAGECONTAINER.style.top = "20px";
+                IMAGECONTAINER.style.right = "20px";
+                IMAGECONTAINER.style.width = "400px";
+                IMAGECONTAINER.style.padding = "10px";
+                IMAGECONTAINER.style.background = "rgba(255, 255, 255, 0.562)";
+                IMAGECONTAINER.style.borderRadius = "10px";
+                IMAGECONTAINER.style.boxShadow =
                   "rgb(38, 57, 77) 0px 20px 30px -10px;";
 
-                const image = new Image();
-                image.src = label.image;
-                image.style.width = "100%";
-                image.style.height = "auto";
-                image.style.maxHeight = "600px";
+                //Image
+                const IMAGE = new Image();
+                IMAGE.src = label.image;
+                IMAGE.style.width = "100%";
+                IMAGE.style.height = "auto";
+                IMAGE.style.maxHeight = "600px";
 
-                const description = document.createElement("p");
-                description.innerHTML = label.short_description_en;
-                description.style.fontSize = "15px";
+                //Description
+                const DESCRIPTION = document.createElement("p");
+                DESCRIPTION.innerHTML = label.short_description_en;
+                DESCRIPTION.style.fontSize = "15px";
 
-                imageContainer.appendChild(title);
-                imageContainer.appendChild(image);
-                imageContainer.appendChild(description);
+                //Affecte les élemenst à la div
+                IMAGECONTAINER.appendChild(TITLE);
+                IMAGECONTAINER.appendChild(IMAGE);
+                IMAGECONTAINER.appendChild(DESCRIPTION);
 
                 // Replace the content of bottomText with the image and description
-                bottomText.innerHTML = "";
-                bottomText.appendChild(imageContainer);
+                CONTENTDIV.innerHTML = "";
+                CONTENTDIV.appendChild(IMAGECONTAINER);
               } else {
                 // Clear bottomText if no label is hovered
-                bottomText.innerHTML = "";
+                CONTENTDIV.innerHTML = "";
               }
             });
 
@@ -271,80 +279,85 @@
         .then((response) => response.json())
         .then((sitesData) => {
           // Récupérez l'élément dropdown
-          const dropdown = document.getElementById("sitesDropdown");
+          const DROPDOWN = document.getElementById("sitesDropdown");
 
           // Créez un objet pour stocker les sites par pays
-          const sitesByCountry = {};
+          const SITESBYCOUNTRY = {};
 
           // Bouclez sur les données des sites UNESCO
           sitesData.forEach((site) => {
             // Vérifiez si le pays existe dans l'objet
-            if (!sitesByCountry[site.states_name_en]) {
-              sitesByCountry[site.states_name_en] = [];
+            if (!SITESBYCOUNTRY[site.states_name_en]) {
+              SITESBYCOUNTRY[site.states_name_en] = [];
             }
 
             // Ajoutez le site au tableau correspondant au pays
-            sitesByCountry[site.states_name_en].push(site);
+            SITESBYCOUNTRY[site.states_name_en].push(site);
           });
 
           // Bouclez sur les pays et créez les groupes et options
-          for (const country in sitesByCountry) {
-            if (sitesByCountry.hasOwnProperty(country)) {
+          for (const COUNTRY in SITESBYCOUNTRY) {
+            if (SITESBYCOUNTRY.hasOwnProperty(COUNTRY)) {
               // Créez un groupe d'options pour chaque pays
-              const optgroup = document.createElement("optgroup");
-              optgroup.label = country;
+              const OPTGROUP = document.createElement("optgroup");
+              OPTGROUP.label = COUNTRY;
 
               // Ajoutez les options pour chaque site du pays
-              sitesByCountry[country].forEach((site) => {
-                const option = document.createElement("option");
-                option.value = site.name_en;
-                option.text = site.name_en;
-                optgroup.appendChild(option);
+              SITESBYCOUNTRY[COUNTRY].forEach((site) => {
+                const OPTION = document.createElement("option");
+                OPTION.value = site.name_en;
+                OPTION.text = site.name_en;
+                OPTGROUP.appendChild(OPTION);
               });
 
               // Ajoutez le groupe d'options au dropdown
-              dropdown.appendChild(optgroup);
+              DROPDOWN.appendChild(OPTGROUP);
             }
           }
         })
+        //Erreur json
         .catch((error) =>
           console.error("Erreur lors du chargement des sites UNESCO :", error)
         );
 
+      //Si un site est sélectionné dans le menu déroulant, alors zoom/cible celui-ci
       document
         .getElementById("sitesDropdown")
         .addEventListener("change", function () {
           zoomToSelectedSite(this.value); // Appelle la fonction pour zoomer sur le site sélectionné
         });
 
+      //Animation de zoom vers le site séléctionné
       function zoomToSelectedSite(selectedSite) {
         fetch("datasets/real_planet_unesco.json")
           .then((res) => res.json())
           .then((places) => {
-            const selectedSiteData = places.find(
+            const SELECTEDSITEDATA = places.find(
               (site) => site.name_en === selectedSite
             );
 
-            if (selectedSiteData) {
+            if (SELECTEDSITEDATA) {
+              //Zoom
               globeInstance.pointOfView(
                 {
-                  lat: selectedSiteData.latitude,
-                  lng: selectedSiteData.longitude,
+                  lat: SELECTEDSITEDATA.latitude,
+                  lng: SELECTEDSITEDATA.longitude,
                   altitude: 0.3,
                 },
                 3000
               );
 
+              //Affiche seulement le site seléctionné
               var site = selectedSite;
               fetch("datasets/real_planet_unesco.json")
                 .then((response) => response.json())
                 .then((places) => {
-                  const filteredPlaces = places.filter(
+                  const FILTEREDPLACES = places.filter(
                     (place) =>
                       place.name_en.toLowerCase() === selectedSite.toLowerCase()
                   );
-                  if (filteredPlaces) {
-                    globeInstance.labelsData(filteredPlaces);
+                  if (FILTEREDPLACES) {
+                    globeInstance.labelsData(FILTEREDPLACES);
                   }
                 });
             }
@@ -390,10 +403,11 @@
                   );
                 }, 3000);
               }
+              //Si aucun pays n'est spécifié
               if (inputCountry == "") {
                 allCountry();
               }
-              //Si le pays n'est pas trouvé
+              //Si le pays n'est pas trouvé dans le json
               else if (!countryData) {
                 alert(
                   "Le site que vous avez saisi est incorrect, veuillez en entrer un autre."
@@ -403,24 +417,27 @@
             }
           });
       }
+
+      //Affiche seulement les sites du pays recherché
       function countryPoint() {
         var inputCountry = document.getElementById("countrySearch").value;
 
         fetch("datasets/real_planet_unesco.json")
           .then((response) => response.json())
           .then((places) => {
-            const filteredPlaces = places.filter(
+            const FILTEREDPLACES = places.filter(
               (place) =>
                 place.states_name_en.toLowerCase() ===
                 inputCountry.toLowerCase()
             );
-            if (filteredPlaces) {
-              globeInstance.labelsData(filteredPlaces);
-              goToCountry();
+            if (FILTEREDPLACES) {
+              globeInstance.labelsData(FILTEREDPLACES);
+              goToCountry(); //Appelle la fonction de zoom sur le pays
             }
           });
       }
 
+      //Si la touche enter est pressée alors rechercher le pays entré
       $(document).ready(function () {
         $("#countrySearch").keypress(function (e) {
           if (e.keyCode == 13) {
@@ -429,20 +446,20 @@
         });
       });
 
-      // Suggestion dans la bare de recherche
-      const searchInput = document.getElementById("countrySearch");
-      searchInput.addEventListener("keyup", function () {
-        const input = searchInput.value;
+      // Suggestion des pays pour la recherche de pays
+      const SEARCHINPUT = document.getElementById("countrySearch");
+      SEARCHINPUT.addEventListener("keyup", function () {
+        const INPUT = SEARCHINPUT.value;
 
         fetch("datasets/countries-positions.json")
           .then((response) => response.json())
           .then((jsonData) => {
-            const result = jsonData.ref_country_codes.filter((place) =>
-              place.country.toLowerCase().includes(input.toLowerCase())
+            const RESULT = jsonData.ref_country_codes.filter((place) =>
+              place.country.toLowerCase().includes(INPUT.toLowerCase())
             );
             let suggestion = "";
-            if (input != "") {
-              result.forEach((resultItem) => {
+            if (INPUT != "") {
+              RESULT.forEach((resultItem) => {
                 suggestion += `<div class="suggestion">${resultItem.country}</div>`;
               });
             }
@@ -452,13 +469,13 @@
         fetch("datasets/real_planet_unesco.json")
           .then((response) => response.json())
           .then((places) => {
-            const filteredPlaces = places.filter(
+            const FILTEREDPLACES = places.filter(
               (place) =>
                 place.states_name_en.toLowerCase() ===
                 inputCountry.toLowerCase()
             );
-            if (filteredPlaces) {
-              globeInstance.labelsData(filteredPlaces);
+            if (FILTEREDPLACES) {
+              globeInstance.labelsData(FILTEREDPLACES);
               goToCountry();
             } else {
               console.log("Aucun site trouvé pour ce pays.");
