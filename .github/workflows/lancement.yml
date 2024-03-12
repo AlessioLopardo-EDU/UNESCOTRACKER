@@ -12,10 +12,10 @@ jobs:
         node-version: 20.0.0
     - name: Install Live Server
       run: npm install -g live-server
-    - name: Run Live Server using npx
-      run: npx live-server
     - name: Build and Run the app
       run: |
        git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
        npm install
        npm run build
+       - name: Run Live Server using npx
+       run: npx live-server
