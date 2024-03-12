@@ -1,0 +1,19 @@
+steps:
+- uses: actions/checkout@v2
+- name: Setup Node.js
+  uses: actions/setup-node@v1
+  with:
+    node-version: '20' 
+    - name: Install Live Server
+      run: npm install -g live-server
+    - name: Run Live Server using npx
+      run: npx live-server
+      - name: Build and Run the app
+      run: |
+      npm install
+      npm run build
+      
+
+
+
+
