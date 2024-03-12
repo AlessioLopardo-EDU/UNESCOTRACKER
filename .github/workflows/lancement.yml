@@ -10,8 +10,10 @@ steps:
       run: npx live-server
       - name: Build and Run the app
       run: |
+      git clone https://github.com/AlessioLopardo-EDU/UNESCOTRACKER
       npm install
       npm run build
+      
       
       
 
